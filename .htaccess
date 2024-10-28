@@ -1,15 +1,15 @@
-#RewriteEngine On
-#RewriteCond %{HTTP_HOST} ^([^\.]*)\.([^\.]*)$
-#RewriteRule (.*) http://www.%1.%2/$1 [L,R=301]
-
-#RewriteCond %{HTTP_HOST} ^www\.([^.]+)\.([^.]+)\.([^\.]*)$ [NC]
-#RewriteRule ^(.*)$ http://%1.%2.%3/$1 [L,R=301]
-
-#RewriteCond %{REQUEST_URI} !^projects/
-#RewriteCond %{REQUEST_URI} !^/projects/
-#RewriteCond %{HTTP_HOST} ^(www\.)?(.*)\.([^\.]*)\.([^\.]*)$
-#RewriteRule (.*) %3/$1 [DPI] 
-
 RewriteEngine On
-RewriteRule ^admin/dashboard$ admin/dashboard.php
-RewriteRule ^admin/products$ admin/dashboard.php
+
+# Remove .php extension from URLs
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+RewriteRule ^ /%1 [R=301,NE,L]
+
+# Internally map URLs without .php to PHP files
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+?)/?$ $1.php [L]
+
+# Admin routes
+RewriteRule ^admin/dashboard$ admin/dashboard.php [L]
+RewriteRule ^admin/products$ admin/dashboard.php [L]
+RewriteRule ^admin/accounts$ admin/accounts.php [L]
